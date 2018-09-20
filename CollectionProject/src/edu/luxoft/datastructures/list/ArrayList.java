@@ -94,8 +94,8 @@ public class ArrayList implements List {
     @Override
     public int lastIndexOf(Object value) {
         return IntStream
-                .iterate(size-1, t -> t-1)//Looks like bug in Jav!!!!!!seed has been passed through stream twice
-                .limit(size)
+                .range(0,size)
+                .map(t->size-1-t)
                 .filter(t->array[t].equals(value))
                 .findFirst()
                 .orElse(-1);

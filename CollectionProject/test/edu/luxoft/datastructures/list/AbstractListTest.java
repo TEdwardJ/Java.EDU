@@ -94,6 +94,12 @@ public abstract class AbstractListTest {
     }
 
     @Test
+    public void get(){
+       Assert.assertEquals("C",listWithFiveElements.get(2));
+       Assert.assertEquals("A",listWithFiveElements.get(0));
+    }
+
+    @Test
     public void testRemove(){
         Assert.assertEquals("C",listWithFiveElements.remove(2));
         Assert.assertEquals(4,listWithFiveElements.size());

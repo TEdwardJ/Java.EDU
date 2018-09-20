@@ -147,7 +147,7 @@ public class LinkedList implements List {
     public int indexOf(Object value) {
         int cnt = 0;
         for (Node iNode = head; iNode != null; iNode = iNode.getNext()) {
-            if (iNode.getValue().equals(value)) {
+            if (( value == null && iNode.getValue() == null) ||iNode.getValue().equals(value) ) {
                 return cnt;
             }
             cnt++;
@@ -159,7 +159,7 @@ public class LinkedList implements List {
     public int lastIndexOf(Object value) {
         Node curNode = tail;
         for (int i=size-1;i>=0;i--){
-            if (curNode.getValue().equals(value)){
+            if (curNode.getValue().equals(value) || (curNode.getValue() == null && value == null)){
                 return i;
             }else{
                 curNode = curNode.getPrev();
