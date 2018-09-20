@@ -1,4 +1,4 @@
-package edu.luxoft.datastructures.Stack;
+package edu.luxoft.datastructures.stack;
 
 import org.junit.Assert;
 import org.junit.Before;

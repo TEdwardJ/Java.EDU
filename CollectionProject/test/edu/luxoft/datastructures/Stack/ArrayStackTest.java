@@ -1,8 +1,4 @@
-package edu.luxoft.datastructures.Stack;
-
-import org.junit.Test;
-
-import java.util.NoSuchElementException;
+package edu.luxoft.datastructures.stack;
 
 import static org.junit.Assert.assertEquals;
 

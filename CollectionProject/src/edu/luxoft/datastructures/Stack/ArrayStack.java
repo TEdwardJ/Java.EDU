@@ -1,8 +1,7 @@
-package edu.luxoft.datastructures.Stack;
+package edu.luxoft.datastructures.stack;
 
 import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 public class ArrayStack implements Stack {
     private Object[] array;
@@ -41,7 +40,7 @@ public class ArrayStack implements Stack {
     @Override
     public Object pop() {
         if (size == 0){
-            throw new NoSuchElementException("Stack has zero size");
+            throw new NoSuchElementException("stack has zero size");
         } else {
             Object result = array[size - 1];
             array[size-1] = null;

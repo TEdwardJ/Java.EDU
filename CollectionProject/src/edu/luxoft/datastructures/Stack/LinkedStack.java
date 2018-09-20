@@ -1,4 +1,4 @@
-package edu.luxoft.datastructures.Stack;
+package edu.luxoft.datastructures.stack;
 
 import edu.luxoft.datastructures.Node;
 import edu.luxoft.datastructures.StackNode;
