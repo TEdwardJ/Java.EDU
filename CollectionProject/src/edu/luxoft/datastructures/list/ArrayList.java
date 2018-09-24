@@ -1,6 +1,7 @@
 package edu.luxoft.datastructures.list;
 
 import java.util.Arrays;
+import java.util.StringJoiner;
 import java.util.stream.IntStream;
 
 // TDD
@@ -123,13 +124,11 @@ public class ArrayList implements List {
 
     @Override
     public String toString() {
-        StringBuilder str = Arrays.stream(array)
+
+        StringJoiner joiner = Arrays.stream(array)
                 .limit(size())
-                .collect(StringBuilder::new, (t,s)->t.append(", ").append(s), StringBuilder::append);
-        return str
-                .delete(0,2)
-                .insert(0,"ArrayList{")
-                .append('}')
-                .toString();
+                .map(Object::toString)
+                .collect(()->new StringJoiner(", ","ArrayList{","}"), StringJoiner::add, StringJoiner::merge);
+        return joiner.toString();
     }
 }

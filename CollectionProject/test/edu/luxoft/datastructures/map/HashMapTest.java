@@ -1,5 +1,6 @@
 package edu.luxoft.datastructures.map;
 
+import edu.luxoft.datastructures.list.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +10,7 @@ import static org.junit.Assert.*;
 public class HashMapTest {
 
     Map map = new HashMap();
+    Map map2 = new HashMap();
 
     @Before
     public void prepare(){
@@ -17,6 +19,10 @@ public class HashMapTest {
         map.put("C","cc");
         map.put("D","dd");
         map.put("E","ee");
+        map2.put("X","xx");
+        map2.put("Y","yy");
+        map2.put("Z","zz");
+        map2.put("B","bbb");
     }
 
     @Test
@@ -47,7 +53,6 @@ public class HashMapTest {
         Assert.assertFalse(map.containsKey("bb"));
         map.remove("A");
         Assert.assertFalse(map.containsKey("A"));
-
     }
 
     @Test
@@ -56,4 +61,51 @@ public class HashMapTest {
         map.remove("B");
         Assert.assertEquals(4,map.size());
     }
+
+    @Test
+    public void testKeys(){
+        List keysList = map.keys();
+        System.out.println(keysList);
+        Assert.assertEquals(5,map.size());
+        Assert.assertEquals(5,keysList.size());
+        Assert.assertTrue(keysList.contains("A"));
+        Assert.assertTrue(keysList.contains("B"));
+        Assert.assertTrue(keysList.contains("C"));
+        Assert.assertTrue(keysList.contains("D"));
+        Assert.assertTrue(keysList.contains("E"));
+        Assert.assertFalse(keysList.contains("EE"));
+    }
+
+    @Test
+    public void testValues(){
+        List valuesList = map.values();
+        System.out.println(valuesList);
+        Assert.assertEquals(5,map.size());
+        Assert.assertEquals(5,valuesList.size());
+        Assert.assertTrue(valuesList.contains("aa"));
+        Assert.assertTrue(valuesList.contains("bb"));
+        Assert.assertTrue(valuesList.contains("cc"));
+        Assert.assertTrue(valuesList.contains("dd"));
+        Assert.assertTrue(valuesList.contains("ee"));
+        Assert.assertFalse(valuesList.contains("EE"));
+    }
+
+    @Test
+    public void testPutAll(){
+        map.putAll((HashMap)map2);
+        Assert.assertEquals(8,map.size());
+        Assert.assertEquals("bbb",map.get("B"));
+    }
+
+    @Test
+    public void testWithResize(){
+        map.putAll((HashMap)map2);
+        map.put("T","ttt");
+        map.put("R","rrr");
+        map.put("W","www");
+
+        Assert.assertEquals(11,map.size());
+        Assert.assertEquals("www",map.get("W"));
+    }
+
 }
