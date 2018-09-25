@@ -3,6 +3,8 @@ package edu.luxoft.datastructures.map;
 
 import edu.luxoft.datastructures.list.List;
 
+import java.util.Iterator;
+
 public interface Map {
     Object put(Object key, Object value);
 
@@ -21,4 +23,6 @@ public interface Map {
 
 
     int size();
+
+    Iterator iterator();
 }

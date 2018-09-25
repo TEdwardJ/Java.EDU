@@ -1,11 +1,47 @@
 package edu.luxoft.datastructures.list;
 
+import java.util.Iterator;
+import java.util.StringJoiner;
 import java.util.stream.Stream;
 
-public class LinkedList implements List {
+public class LinkedList extends AbstractList {
     private Node head;
     private Node tail;
-    private int size;
+
+
+    public static class Node {
+        private Node prev;
+        private Node next;
+        private Object value;
+
+        public Node(Object value) {
+            this.value = value;
+        }
+
+        public void setPrev(Node prev) {
+            this.prev = prev;
+        }
+
+        public Node getPrev() {
+            return prev;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        public void setValue(Object value) {
+            this.value = value;
+        }
+
+        public Node getNext() {
+            return next;
+        }
+
+        public void setNext(Node next) {
+            this.next = next;
+        }
+    }
 
     @Override
     public void add(Object value) {
@@ -24,18 +60,12 @@ public class LinkedList implements List {
             add(value);
             return;
         }
-        checkIndex(index);
+        validateIndex(index);
         Node newNode = new Node(value);
         Node oldNode = getNode(index);
         reLink(oldNode, newNode, index);
 
         size++;
-    }
-
-    private void checkIndex(int index) {
-        if (index > size - 1 || index < 0) {
-            throw new IndexOutOfBoundsException();
-        }
     }
 
 
@@ -82,7 +112,7 @@ public class LinkedList implements List {
 
     @Override
     public Object remove(int index) {
-        checkIndex(index);
+        validateIndex(index);
         Node objToRemove = getNode(index);
         if(index==0){
             unLinkFirst();
@@ -102,13 +132,13 @@ public class LinkedList implements List {
 
     @Override
     public Object get(int index) {
-        checkIndex(index);
+        validateIndex(index);
         return getNode(index).getValue();
     }
 
     @Override
     public Object set(Object value, int index) {
-        checkIndex(index);
+        validateIndex(index);
         int cnt = 0;
         Object tmp;
         for (Node iNode = head; iNode != null; iNode = iNode.getNext()) {
@@ -129,19 +159,11 @@ public class LinkedList implements List {
     }
 
     @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
     public boolean isEmpty() {
         return size != 0;
     }
 
-    @Override
-    public boolean contains(Object value) {
-        return indexOf(value) != -1;
-    }
+
 
     @Override
     public int indexOf(Object value) {
@@ -185,15 +207,16 @@ public class LinkedList implements List {
     }
     @Override
     public String toString() {
-        StringBuilder str = Stream
+        StringJoiner joiner = Stream
                 .iterate(head, t -> t.getNext())
-                .limit(size)
-                .collect(StringBuilder::new, (t,s)->t.append(", ").append(s.getValue()), StringBuilder::append);
-        return str
-                .delete(0,2)
-                .insert(0,"LinkedList{")
-                .append('}')
-                .toString();
+                .limit(size())
+                .map(Object::toString)
+                .collect(()->new StringJoiner(", ","ArrayList{","}"), StringJoiner::add, StringJoiner::merge);
+        return joiner.toString();
     }
 
+    @Override
+    public Iterator iterator() {
+        return new ListIterator();
+    }
 }

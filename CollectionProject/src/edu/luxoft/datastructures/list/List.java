@@ -1,6 +1,9 @@
 package edu.luxoft.datastructures.list;
 
-public interface List {
+import java.io.Serializable;
+import java.util.Iterator;
+
+public interface List extends Iterable {
     // add value to the end of the list
     void add(Object value);
 
@@ -39,4 +42,6 @@ public interface List {
 
     // [A, B, C]
     String toString();
+
+    Iterator iterator();
 }

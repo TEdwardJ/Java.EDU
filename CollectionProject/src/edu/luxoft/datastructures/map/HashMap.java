@@ -4,19 +4,41 @@ import edu.luxoft.datastructures.list.ArrayList;
 import edu.luxoft.datastructures.list.List;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class HashMap implements Map {
+public class HashMap implements Map, Iterable<HashMap.Entry> {
 
     private static final double LOAD_RATIO = 0.75d;
     private static final int INITIAL_CAPACITY = 8;
 
-    private ArrayList[] hashBucket;
+    private ArrayList[] chunkBucket;
 
+    private class HashMapIterator implements Iterator<HashMap.Entry> {
+        private int hashIdx=0, chunkIdx=0, index=0;
 
-    public class Entry{
+        @Override
+        public boolean hasNext() {
+            return index < HashMap.this.size();
+        }
+
+        @Override
+        public HashMap.Entry next() {
+            HashMap.Entry current;
+            while(chunkBucket[hashIdx] == null||chunkIdx == chunkBucket[hashIdx].size()){
+                hashIdx++;
+                chunkIdx=0;
+            }
+            current = (HashMap.Entry) chunkBucket[hashIdx].get(chunkIdx);
+            chunkIdx++;
+            index++;
+            return current;
+        }
+    }
+
+    public static class Entry{
         private Object key;
         private Object value;
 
@@ -27,10 +49,6 @@ public class HashMap implements Map {
 
         public Object getKey() {
             return key;
-        }
-
-        public void setKey(Object key) {
-            this.key = key;
         }
 
         public Object getValue() {
@@ -69,10 +87,8 @@ public class HashMap implements Map {
 
 
     public HashMap() {
-        hashBucket = new ArrayList[INITIAL_CAPACITY];
-        for (int i = 0; i < hashBucket.length; i++) {
-            hashBucket[i] = new ArrayList();
-        }
+        //hash can be less than zero!!!!!
+        chunkBucket = new ArrayList[INITIAL_CAPACITY];
     }
 
     private void putEntry(Entry e){
@@ -108,11 +124,15 @@ public class HashMap implements Map {
 
     private int getCurrentChunkIndex(Object key, int size) {
         int hash = key.hashCode();
-        return hash%size;
+        return (int) (hash%size*Math.signum(hash));
     }
 
     private List getCurrentList(Object key) {
-        return hashBucket[getCurrentChunkIndex(key, hashBucket.length)];
+        int chunkIndex = getCurrentChunkIndex(key, chunkBucket.length);
+        if(chunkBucket[chunkIndex]==null){
+            chunkBucket[chunkIndex] = new ArrayList();
+        }
+        return chunkBucket[chunkIndex];
     }
 
     private Entry getEntry(Object key){
@@ -160,16 +180,15 @@ public class HashMap implements Map {
     @Override
     public void putAll(HashMap map) {
         List keysList = map.keys();
-        Object key;
-        for (int i = 0; i < keysList.size(); i++) {
-            key = keysList.get(i);
+        for (Object key : keysList) {
             this.put(key,map.get(key));
         }
     }
 
     private Stream<Entry> getEntriesStream(){
         return Arrays
-                .stream(hashBucket)
+                .stream(chunkBucket)
+                .filter(t->t!=null)
                 .flatMap(b -> IntStream
                         .range(0,b.size())
                         .mapToObj(i->(Entry)b.get(i)));
@@ -203,7 +222,8 @@ public class HashMap implements Map {
     @Override
     public int size() {
         return Arrays
-                .stream(hashBucket)
+                .stream(chunkBucket)
+                .filter(t->t!=null)
                 .mapToInt(t->t.size())
                 .sum();
     }
@@ -212,21 +232,24 @@ public class HashMap implements Map {
         if(!validateSize()){
             return;
         }
-        ArrayList[] newHashBucket = new ArrayList[hashBucket.length<<1];
-        for (int i = 0; i < newHashBucket.length; i++) {
-            newHashBucket[i] = new ArrayList();
-        }
+        ArrayList[] newChunkBucket = new ArrayList[chunkBucket.length<<1];
+
         List entriesList = getEntries();
 
-        hashBucket = newHashBucket;
+        chunkBucket = newChunkBucket;
 
-        for (int i=0; i < entriesList.size(); i++){
-            Entry e = (Entry)entriesList.get(i);
+        for (Object o : entriesList) {
+            Entry e = (Entry)o;
             this.putEntry(e);
         }
     }
 
     private boolean validateSize(){
-        return size()+1 >= hashBucket.length * LOAD_RATIO;
+        return size()+1 >= chunkBucket.length * LOAD_RATIO;
+    }
+
+    @Override
+    public Iterator iterator() {
+        return new HashMapIterator();
     }
 }

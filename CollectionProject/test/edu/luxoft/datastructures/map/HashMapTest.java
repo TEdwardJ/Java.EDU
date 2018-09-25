@@ -5,12 +5,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 public class HashMapTest {
 
     Map map = new HashMap();
     Map map2 = new HashMap();
+    Map emptyMap = new HashMap();
+    Map twoValueMap = new HashMap();
 
     @Before
     public void prepare(){
@@ -23,6 +23,8 @@ public class HashMapTest {
         map2.put("Y","yy");
         map2.put("Z","zz");
         map2.put("B","bbb");
+        twoValueMap.put("0","qqq");
+        twoValueMap.put("7","qzzzqq");
     }
 
     @Test
@@ -108,4 +110,18 @@ public class HashMapTest {
         Assert.assertEquals("www",map.get("W"));
     }
 
+    @Test
+    public void testMapIterator(){
+        for (HashMap.Entry e: (HashMap)map) {
+            System.out.println(e);
+        }
+
+        for (HashMap.Entry e: (HashMap)emptyMap) {
+            System.out.println(e);
+        }
+
+        for (HashMap.Entry e: (HashMap) twoValueMap) {
+            System.out.println(e);
+        }
+    }
 }

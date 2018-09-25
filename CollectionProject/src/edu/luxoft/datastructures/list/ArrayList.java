@@ -6,10 +6,10 @@ import java.util.stream.IntStream;
 
 // TDD
 // Ctrl + Shift + T
-public class ArrayList implements List {
+public class ArrayList extends AbstractList {
     private static final int INITIAL_CAPACITY = 8;
     private Object[] array = new Object[INITIAL_CAPACITY];
-    private int size;
+
 
     @Override
     public void add(Object value) {
@@ -25,22 +25,17 @@ public class ArrayList implements List {
             add(value);
             return;
         }
-        checkIndex(index);
+        validateIndex(index);
         checkBounds();
         shiftArray(index,-1);
         array[index] = value;
         size++;
     }
 
-    private void checkIndex(int index){
-        if (index > size-1 || index < 0){
-            throw new IndexOutOfBoundsException();
-        }
-    }
 
     @Override
     public Object remove(int index) {
-        checkIndex(index);
+        validateIndex(index);
         Object objForRemove = array[index];
         shiftArray(index+1,1);
         array[size-1] = null;
@@ -50,13 +45,13 @@ public class ArrayList implements List {
 
     @Override
     public Object get(int index) {
-        checkIndex(index);
+        validateIndex(index);
         return array[index];
     }
 
     @Override
     public Object set(Object value, int index) {
-        checkIndex(index);
+        validateIndex(index);
         Object objToReplace = array[index];
         array[index] = value;
         return objToReplace;
@@ -69,19 +64,11 @@ public class ArrayList implements List {
     }
 
     @Override
-    public int size() {
-        return size;
-    }
-
-    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
-    @Override
-    public boolean contains(Object value) {
-        return indexOf(value)!=-1;
-    }
+
 
     @Override
     public int indexOf(Object value) {

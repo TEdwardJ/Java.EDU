@@ -1,5 +1,6 @@
 package edu.luxoft.datastructures.list;
 
+import edu.luxoft.datastructures.map.HashMap;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -126,5 +127,16 @@ public abstract class AbstractListTest {
     }
 
 
+    @Test
+    public void testListIterator(){
+        for (Object e: listWithFiveElements) {
+            System.out.println(e);
+        }
+
+        for (Object e: listWithZeroElements) {
+            System.out.println(e);
+        }
+
+    }
 
 }
