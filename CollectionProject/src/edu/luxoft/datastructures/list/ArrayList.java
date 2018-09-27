@@ -1,6 +1,7 @@
 package edu.luxoft.datastructures.list;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.stream.IntStream;
 
@@ -114,7 +115,7 @@ public class ArrayList extends AbstractList {
 
         StringJoiner joiner = Arrays.stream(array)
                 .limit(size())
-                .map(Object::toString)
+                .map(Objects::toString)
                 .collect(()->new StringJoiner(", ","ArrayList{","}"), StringJoiner::add, StringJoiner::merge);
         return joiner.toString();
     }

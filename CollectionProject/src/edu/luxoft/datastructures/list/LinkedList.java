@@ -1,6 +1,7 @@
 package edu.luxoft.datastructures.list;
 
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.stream.Stream;
 
@@ -208,10 +209,11 @@ public class LinkedList extends AbstractList {
     @Override
     public String toString() {
         StringJoiner joiner = Stream
-                .iterate(head, t -> t.getNext())
+                .iterate(head, Node::getNext)
                 .limit(size())
-                .map(Object::toString)
-                .collect(()->new StringJoiner(", ","ArrayList{","}"), StringJoiner::add, StringJoiner::merge);
+                .map(Node::getValue)
+                .map(Objects::toString)
+                .collect(()->new StringJoiner(", ","ArrayList{","}"),StringJoiner::add, StringJoiner::merge);
         return joiner.toString();
     }
 

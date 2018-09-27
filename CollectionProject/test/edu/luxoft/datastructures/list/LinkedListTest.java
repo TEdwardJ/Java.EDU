@@ -18,5 +18,6 @@ public class LinkedListTest extends AbstractListTest{
         Assert.assertEquals(6,listWithFiveElements.size());
         Assert.assertNull(listWithFiveElements.get(listWithFiveElements.size()-1));
         Assert.assertTrue(listWithFiveElements.contains(null));
+        System.out.println(listWithFiveElements);
     }
 }
