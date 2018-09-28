@@ -9,14 +9,14 @@ import java.util.Objects;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class HashMap implements Map, Iterable<HashMap.Entry> {
+public class HashMap<K,V> implements Map<K, V>, Iterable<HashMap.Entry> {
 
     private static final double LOAD_RATIO = 0.75d;
     private static final int INITIAL_CAPACITY = 8;
 
     private ArrayList[] chunkBucket;
 
-    private class HashMapIterator implements Iterator<HashMap.Entry> {
+    private class HashMapIterator<K, V> implements Iterator<HashMap.Entry<K, V>> {
         private int hashIdx=0, chunkIdx=0, index=0;
 
         @Override
@@ -25,37 +25,37 @@ public class HashMap implements Map, Iterable<HashMap.Entry> {
         }
 
         @Override
-        public HashMap.Entry next() {
-            HashMap.Entry current;
+        public HashMap.Entry<K, V> next() {
+            HashMap.Entry<K, V> current;
             while(chunkBucket[hashIdx] == null||chunkIdx == chunkBucket[hashIdx].size()){
                 hashIdx++;
                 chunkIdx=0;
             }
-            current = (HashMap.Entry) chunkBucket[hashIdx].get(chunkIdx);
+            current = (HashMap.Entry<K, V>) chunkBucket[hashIdx].get(chunkIdx);
             chunkIdx++;
             index++;
             return current;
         }
     }
 
-    public static class Entry{
-        private Object key;
-        private Object value;
+    public static class Entry<K, V>{
+        private K key;
+        private V value;
 
-        public Entry(Object key, Object value) {
+        public Entry(K key, V value) {
             this.key = key;
             this.value = value;
         }
 
-        public Object getKey() {
+        public K getKey() {
             return key;
         }
 
-        public Object getValue() {
+        public V getValue() {
             return value;
         }
 
-        public void setValue(Object value) {
+        public void setValue(V value) {
             this.value = value;
         }
 
@@ -67,7 +67,7 @@ public class HashMap implements Map, Iterable<HashMap.Entry> {
             if (o == null || getClass() != o.getClass()) {
                 return false;
             }
-            Entry entry = (Entry) o;
+            Entry<K ,V> entry = (Entry) o;
             return Objects.equals(getKey(), entry.getKey());
         }
 
@@ -91,15 +91,15 @@ public class HashMap implements Map, Iterable<HashMap.Entry> {
         chunkBucket = new ArrayList[INITIAL_CAPACITY];
     }
 
-    private void putEntry(Entry e){
+    private void putEntry(Entry<K, V> e){
         List currentList = getCurrentList(e.getKey());
         currentList.add(e);
     }
 
-    private Object putInternal(Object key, Object value, boolean changeFlag){
-        Entry oldEntry = getEntry(key);
+    private V putInternal(K key, V value, boolean changeFlag){
+        Entry<K, V> oldEntry = getEntry(key);
         if(oldEntry != null){
-            Object result = oldEntry.getValue();
+            V result = oldEntry.getValue();
             if(changeFlag){
                 oldEntry.setValue(value);
             }
@@ -113,12 +113,12 @@ public class HashMap implements Map, Iterable<HashMap.Entry> {
     }
 
     @Override
-    public Object putIfAbsent(Object key, Object value) {
+    public V putIfAbsent(K key, V value) {
         return putInternal(key,value, false);
     }
 
     @Override
-    public Object put(Object key, Object value) {
+    public V put(K key, V value) {
         return putInternal(key,value, true);
     }
 
@@ -127,7 +127,7 @@ public class HashMap implements Map, Iterable<HashMap.Entry> {
         return (int) (hash%size*Math.signum(hash));
     }
 
-    private List getCurrentList(Object key) {
+    private List getCurrentList(K key) {
         int chunkIndex = getCurrentChunkIndex(key, chunkBucket.length);
         if(chunkBucket[chunkIndex]==null){
             chunkBucket[chunkIndex] = new ArrayList();
@@ -135,7 +135,7 @@ public class HashMap implements Map, Iterable<HashMap.Entry> {
         return chunkBucket[chunkIndex];
     }
 
-    private Entry getEntry(Object key){
+    private Entry getEntry(K key){
         List currentList = getCurrentList(key);
         int idx = currentList.indexOf(new Entry(key,""));
         if (idx!=-1) {
@@ -145,8 +145,8 @@ public class HashMap implements Map, Iterable<HashMap.Entry> {
     }
 
     @Override
-    public Object get(Object key) {
-        Entry tmpEntry = getEntry(key);
+    public V get(K key) {
+        Entry<K, V> tmpEntry = getEntry(key);
         if (tmpEntry!=null) {
             return tmpEntry.getValue();
         }
@@ -154,12 +154,12 @@ public class HashMap implements Map, Iterable<HashMap.Entry> {
     }
 
     @Override
-    public Object remove(Object key) {
+    public V remove(K key) {
         List currentList = getCurrentList(key);
         int idx = currentList.indexOf(new Entry(key,""));
-        Object objToRemove;
+        V objToRemove;
         if (idx!=-1) {
-            objToRemove = ((Entry)currentList.get(idx)).getValue();
+            objToRemove = ((Entry<K, V>)currentList.get(idx)).getValue();
             currentList.remove(idx);
             return objToRemove;
         }
@@ -167,7 +167,7 @@ public class HashMap implements Map, Iterable<HashMap.Entry> {
     }
 
     @Override
-    public boolean containsKey(Object key) {
+    public boolean containsKey(K key) {
         List currentList = getCurrentList(key);
         if ((currentList.contains(new Entry(key,"")))){
             return true;
@@ -176,11 +176,10 @@ public class HashMap implements Map, Iterable<HashMap.Entry> {
     }
 
 
-
     @Override
-    public void putAll(HashMap map) {
-        List keysList = map.keys();
-        for (Object key : keysList) {
+    public void putAll(HashMap<K, V> map) {
+        List<K> keysList = map.keys();
+        for (K key : keysList) {
             this.put(key,map.get(key));
         }
     }

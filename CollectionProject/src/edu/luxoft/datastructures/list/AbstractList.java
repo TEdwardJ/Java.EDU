@@ -2,10 +2,10 @@ package edu.luxoft.datastructures.list;
 
 import java.util.Iterator;
 
-public abstract class AbstractList implements List, Iterable{
+public abstract class AbstractList<T> implements List<T>, Iterable<T>{
     protected int size;
 
-    protected class ListIterator implements Iterator{
+    protected class ListIterator<T> implements Iterator<T>{
 
         private int index = 0;
 
@@ -15,13 +15,13 @@ public abstract class AbstractList implements List, Iterable{
         }
 
         @Override
-        public Object next() {
-            return get(index++);
+        public T next() {
+            return (T)get(index++);
         }
     }
 
     @Override
-    public boolean contains(Object value) {
+    public boolean contains(T value) {
         return indexOf(value)!=-1;
     }
     protected void validateIndex(int index){
@@ -39,7 +39,7 @@ public abstract class AbstractList implements List, Iterable{
     public abstract void clear();
 
     @Override
-    public Iterator iterator() {
+    public Iterator<T> iterator() {
         return new ListIterator();
     }
 }

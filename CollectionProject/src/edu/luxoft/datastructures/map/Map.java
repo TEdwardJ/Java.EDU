@@ -5,18 +5,18 @@ import edu.luxoft.datastructures.list.List;
 
 import java.util.Iterator;
 
-public interface Map {
-    Object put(Object key, Object value);
+public interface Map<K, V> {
+    V put(K key, V value);
 
-    Object get(Object key);
+    V get(K key);
 
-    Object remove(Object key);
+    V remove(K key);
 
-    boolean containsKey(Object key);
+    boolean containsKey(K key);
 
-    Object putIfAbsent(Object key, Object value);
+    V putIfAbsent(K key, V value);
 
-    void putAll(HashMap map);
+    void putAll(HashMap<K, V> map);
 
     List keys();
     List values();

@@ -7,10 +7,10 @@ import org.junit.Test;
 
 public class HashMapTest {
 
-    Map map = new HashMap();
-    Map map2 = new HashMap();
-    Map emptyMap = new HashMap();
-    Map twoValueMap = new HashMap();
+    Map<String, String> map = new HashMap();
+    Map<String, String> map2 = new HashMap();
+    Map<String, String> emptyMap = new HashMap();
+    Map<String, String> twoValueMap = new HashMap();
 
     @Before
     public void prepare(){
@@ -112,15 +112,15 @@ public class HashMapTest {
 
     @Test
     public void testMapIterator(){
-        for (HashMap.Entry e: (HashMap)map) {
+        for (HashMap.Entry e: (HashMap<String, String>)map) {
             System.out.println(e);
         }
 
-        for (HashMap.Entry e: (HashMap)emptyMap) {
+        for (HashMap.Entry e: (HashMap<String, String>)emptyMap) {
             System.out.println(e);
         }
 
-        for (HashMap.Entry e: (HashMap) twoValueMap) {
+        for (HashMap.Entry e: (HashMap<String, String>) twoValueMap) {
             System.out.println(e);
         }
     }

@@ -5,47 +5,47 @@ import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.stream.Stream;
 
-public class LinkedList extends AbstractList {
+public class LinkedList<T> extends AbstractList<T> {
     private Node head;
     private Node tail;
 
 
-    public static class Node {
-        private Node prev;
-        private Node next;
-        private Object value;
+    public static class Node<T> {
+        private Node<T> prev;
+        private Node<T> next;
+        private T value;
 
-        public Node(Object value) {
+        public Node(T value) {
             this.value = value;
         }
 
-        public void setPrev(Node prev) {
+        public void setPrev(Node<T> prev) {
             this.prev = prev;
         }
 
-        public Node getPrev() {
+        public Node<T> getPrev() {
             return prev;
         }
 
-        public Object getValue() {
+        public T getValue() {
             return value;
         }
 
-        public void setValue(Object value) {
+        public void setValue(T value) {
             this.value = value;
         }
 
-        public Node getNext() {
+        public Node<T> getNext() {
             return next;
         }
 
-        public void setNext(Node next) {
+        public void setNext(Node<T> next) {
             this.next = next;
         }
     }
 
     @Override
-    public void add(Object value) {
+    public void add(T value) {
         Node newNode = new Node(value);
         if (size == 0) {
             head = tail = newNode;
@@ -56,7 +56,7 @@ public class LinkedList extends AbstractList {
     }
 
     @Override
-    public void add(Object value, int index) {
+    public void add(T value, int index) {
         if (index==size){
             add(value);
             return;
@@ -68,7 +68,6 @@ public class LinkedList extends AbstractList {
 
         size++;
     }
-
 
     private void reLink(Node nodeAfter, Node newNode, int index) {
         if(index==0){
@@ -112,37 +111,37 @@ public class LinkedList extends AbstractList {
     }
 
     @Override
-    public Object remove(int index) {
+    public T remove(int index) {
         validateIndex(index);
         Node objToRemove = getNode(index);
         if(index==0){
             unLinkFirst();
             size--;
-            return objToRemove.getValue();
+            return (T)objToRemove.getValue();
         }
         if(index==size-1){
             unLinkLast();
             size--;
-            return objToRemove.getValue();
+            return (T)objToRemove.getValue();
         }
         unLink(objToRemove);
         size--;
-        return objToRemove.getValue();
+        return (T)objToRemove.getValue();
     }
 
 
     @Override
-    public Object get(int index) {
+    public T get(int index) {
         validateIndex(index);
         return getNode(index).getValue();
     }
 
     @Override
-    public Object set(Object value, int index) {
+    public T set(T value, int index) {
         validateIndex(index);
         int cnt = 0;
-        Object tmp;
-        for (Node iNode = head; iNode != null; iNode = iNode.getNext()) {
+        T tmp;
+        for (Node<T> iNode = head; iNode != null; iNode = iNode.getNext()) {
             if (index == cnt) {
                 tmp = iNode.getValue();
                 iNode.setValue(value);
@@ -191,8 +190,8 @@ public class LinkedList extends AbstractList {
         return -1;
     }
 
-    private Node getNode(int index) {
-        Node start;
+    private Node<T> getNode(int index) {
+        Node<T> start;
         if (index + 1 <= size >> 1) {
             start = head;
             for (int i = 0; i < index; i++) {

@@ -7,13 +7,13 @@ import java.util.stream.IntStream;
 
 // TDD
 // Ctrl + Shift + T
-public class ArrayList extends AbstractList {
+public class ArrayList<T> extends AbstractList<T> {
     private static final int INITIAL_CAPACITY = 8;
     private Object[] array = new Object[INITIAL_CAPACITY];
 
 
     @Override
-    public void add(Object value) {
+    public void add(T value) {
         if (checkBounds()){
             array[size] = value;
             size++;
@@ -21,7 +21,7 @@ public class ArrayList extends AbstractList {
     }
 
     @Override
-    public void add(Object value, int index) {
+    public void add(T value, int index) {
         if(index == size){
             add(value);
             return;
@@ -35,9 +35,9 @@ public class ArrayList extends AbstractList {
 
 
     @Override
-    public Object remove(int index) {
+    public T remove(int index) {
         validateIndex(index);
-        Object objForRemove = array[index];
+        T objForRemove = (T)array[index];
         shiftArray(index+1,1);
         array[size-1] = null;
         size--;
@@ -45,15 +45,15 @@ public class ArrayList extends AbstractList {
     }
 
     @Override
-    public Object get(int index) {
+    public T get(int index) {
         validateIndex(index);
-        return array[index];
+        return (T)array[index];
     }
 
     @Override
-    public Object set(Object value, int index) {
+    public T set(Object value, int index) {
         validateIndex(index);
-        Object objToReplace = array[index];
+        T objToReplace = (T)array[index];
         array[index] = value;
         return objToReplace;
     }
@@ -72,7 +72,7 @@ public class ArrayList extends AbstractList {
 
 
     @Override
-    public int indexOf(Object value) {
+    public int indexOf(T value) {
         return IntStream
                 .range(0,size)
                 .filter(t->array[t].equals(value))
@@ -81,7 +81,7 @@ public class ArrayList extends AbstractList {
     }
 
     @Override
-    public int lastIndexOf(Object value) {
+    public int lastIndexOf(T value) {
         return IntStream
                 .range(0,size)
                 .map(t->size-1-t)
