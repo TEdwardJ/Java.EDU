@@ -1,3 +1,5 @@
+package edu.luxoft.log;
+
 import org.junit.Before;
 import org.junit.Test;
 
