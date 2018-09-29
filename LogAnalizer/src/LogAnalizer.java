@@ -38,17 +38,20 @@ public class LogAnalizer {
                     logList.add(token);
                 }
             }
-            logReader.close();
-            fileReader.close();
+
 
         } catch (IOException e) {
             e.printStackTrace();
         } finally{
-
+            try {
+                logReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            fileReader.close();
         }
         return logList;
     }
-
 
     private LogToken parseLine(String logLine) {
         Matcher m = log.matcher(logLine);
@@ -79,11 +82,9 @@ public class LogAnalizer {
             fileReader = new FileReader(logFile);
             logReader = new BufferedReader(fileReader);
 
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         }
 
 
