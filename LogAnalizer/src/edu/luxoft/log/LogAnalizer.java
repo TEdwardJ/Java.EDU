@@ -41,10 +41,10 @@ public class LogAnalizer {
 
     private boolean validateLogLine(LogToken token, LocalDateTime from, LocalDateTime to) {
         return token!=null&&
-                ((token.getTime().isAfter(to)||
-                token.getTime().isEqual(to))&&
-                        (from.isBefore(token.getTime())||
-                        from.isEqual(token.getTime())));
+                ((token.getTime().isAfter(from)||
+                token.getTime().isEqual(from))&&
+                        (token.getTime().isBefore(to)||
+                         token.getTime().isEqual(to)));
     }
 
     private LogToken parseLogLine(String logLine) {
