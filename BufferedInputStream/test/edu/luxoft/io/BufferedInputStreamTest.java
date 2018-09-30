@@ -63,7 +63,6 @@ public class BufferedInputStreamTest {
         assertEquals(5, bufferedInputStream.read(byteArrayFull,0,5));
         assertArrayEquals(new byte[]{1,2,3,4,5}, byteArrayFull);
         assertEquals(-1, bufferedInputStream.read());
-
     }
 
     private static class MyTestByteArrayInputStream extends ByteArrayInputStream {

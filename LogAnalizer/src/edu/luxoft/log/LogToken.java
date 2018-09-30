@@ -38,7 +38,7 @@ public class LogToken {
 
     @Override
     public String toString() {
-        return "edu.luxoft.log.LogToken{" +
+        return "LogToken{" +
                 "time=" + time +
                 ", method=" + method +
                 ", message='" + message + '\'' +

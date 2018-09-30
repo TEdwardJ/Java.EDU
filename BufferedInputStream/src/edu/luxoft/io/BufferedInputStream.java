@@ -23,14 +23,18 @@ public class BufferedInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-        if (index == count) {
-            count = inputStream.read(buffer);
-            index = 0;
-        }
+        checkIfIndexResetNeeded();
         if (count == -1) {
             return -1;
         }
         return getByteFromBuffer();
+    }
+
+    private void checkIfIndexResetNeeded() throws IOException {
+        if (index == count) {
+            count = inputStream.read(buffer);
+            index = 0;
+        }
     }
 
     @Override
@@ -39,24 +43,46 @@ public class BufferedInputStream extends InputStream {
     }
 
     @Override
-    public int read(byte[] b, int off, int len) throws IOException {
-        validateParameters(b, off, len);
-        int total = 0;
-        byte curByte;
-        for (int i = off; i < off+len; i++){
-            if ((curByte = (byte)read()) != -1){
-                b[i] = curByte;
-                total++;
+    public int read(byte[] b, int offset, int length) throws IOException {
+        validateParameters(b, offset, length);
+        checkIfIndexResetNeeded();
+        if(count<0){
+            return -1;
+        }
+        int bytesToRead = Math.min(length,b.length-offset);
+        int restInBuffer = count-index;
+        int factBytes = 0;
+        if(restInBuffer > 0){
+            factBytes = Math.min(restInBuffer, bytesToRead);
+            //Let`s suppose that reading 1 byte from buffer would be easier without arraycopy
+            if(factBytes == 1){
+                b[offset] = (byte)read();
+            }else{
+                System.arraycopy(buffer, index, b, offset, factBytes);
+                index += factBytes;
             }
-            else{
-                return (total==0)?-1:total;
+            bytesToRead -= factBytes;
+        }
+
+        //If buffer is already empty but the client still needs more bytes from stream
+        if (bytesToRead>0){
+            int res = 0;
+            if(bytesToRead > DEFAULT_BUFFER_SIZE){
+                res = inputStream.read(b,offset+factBytes,bytesToRead);
+            } else{
+                res = read(b,offset+factBytes,bytesToRead);
+            }
+            if (res != -1){
+                factBytes+=res;
             }
         }
-        return total;
+
+        return factBytes;
     }
 
-    private void validateParameters(byte[] b, int off, int len) {
-        if (len>b.length - off || len < 0|| off < 0){
+
+    private void validateParameters(byte[] b, int offset, int length) {
+        if (length>b.length - offset || length < 0|| offset < 0){
             throw new IndexOutOfBoundsException();
         }
     }

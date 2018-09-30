@@ -23,10 +23,15 @@ public class BufferedOutputStreamTest {
     @Test
     public void write() throws IOException {
         bufferedOutputStream.write(new byte[]{1,2,3});
+        assertArrayEquals(new byte[]{},byteArrayOutputStream.toByteArray());
         bufferedOutputStream.write(new byte[]{4,5,6});
-        assertArrayEquals(new byte[]{1,2,3,4,5},byteArrayOutputStream.toByteArray());
+        assertArrayEquals(new byte[]{1,2,3,4,5,6},byteArrayOutputStream.toByteArray());
         bufferedOutputStream.flush();
         assertArrayEquals(new byte[]{1,2,3,4,5,6},byteArrayOutputStream.toByteArray());
+        bufferedOutputStream.write(new byte[]{1,2,3});
+        assertArrayEquals(new byte[]{1,2,3,4,5,6},byteArrayOutputStream.toByteArray());
+        bufferedOutputStream.flush();
+        assertArrayEquals(new byte[]{1,2,3,4,5,6,1,2,3},byteArrayOutputStream.toByteArray());
     }
 
     @Test
@@ -58,7 +63,7 @@ public class BufferedOutputStreamTest {
             bufferedInput = new BufferedInputStream(inputFile);
             outputFile = new FileOutputStream(f2);
             bufferedOutput = new BufferedOutputStream(outputFile);
-            byte[] b = new byte[10];
+            byte[] b = new byte[5];
             int res;
             while((res = (byte)bufferedInput.read(b)) != -1){
                 bufferedOutput.write(b,0,res);
@@ -67,7 +72,7 @@ public class BufferedOutputStreamTest {
             bufferedInput.close();
             bufferedOutput.close();
             outputFile.close();
-            assertEquals(f1.length(),f2.length());
+             assertEquals(f1.length(),f2.length());
             assertTrue(f1.length()>0&&f2.length()>0);
         } catch (FileNotFoundException e) {
             e.printStackTrace();

@@ -21,15 +21,26 @@ public class BufferedOutputStream extends OutputStream{
     }
 
     @Override
-    public void write(byte[] b, int off, int len) throws IOException {
-        validateParameters(b, off, len);
-        for (int i = off; i < off + len; i++) {
-              write(b[i]);
-        }
+    public void write(byte[] b, int offset, int length) throws IOException {
+        validateParameters(b, offset, length);
+        int bytesToWrite = Math.min(length,b.length-offset);
+
+        if (bytesToWrite>(DEFAULT_BUFFER_SIZE-index)){
+            flush();
+            outputStream.write(b,offset,length);
+        }else if (bytesToWrite <= (DEFAULT_BUFFER_SIZE-index) && bytesToWrite > 1){
+              System.arraycopy(b,offset,buffer,index,bytesToWrite);
+              index += bytesToWrite;
+              checkIfFlushNeeded();
+            }else{
+                for (int i = offset; i < offset + length; i++) {
+                    write(b[i]);
+                }
+            }
     }
 
-    private void validateParameters(byte[] b, int off, int len) {
-        if (len>b.length - off || len < 0|| off < 0){
+    private void validateParameters(byte[] b, int offset, int length) {
+        if (length>b.length - offset || length < 0|| offset < 0){
             throw new IndexOutOfBoundsException();
         }
     }
@@ -50,11 +61,15 @@ public class BufferedOutputStream extends OutputStream{
 
     @Override
     public void write(int b) throws IOException {
+        checkIfFlushNeeded();
+        buffer[index++] = (byte) b;
+    }
+
+    private void checkIfFlushNeeded() throws IOException {
         if(index == DEFAULT_BUFFER_SIZE){
             flush();
             index = 0;
         }
-        buffer[index++] = (byte) b;
     }
 
 }
