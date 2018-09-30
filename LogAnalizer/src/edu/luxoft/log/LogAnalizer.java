@@ -3,8 +3,6 @@ package edu.luxoft.log;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -42,9 +40,11 @@ public class LogAnalizer {
     }
 
     private boolean validateLogLine(LogToken token, LocalDateTime from, LocalDateTime to) {
-        return token!=null&&(token.getTime().isAfter(to)||
-                from.isBefore(token.getTime())||
-                from.isEqual(token.getTime()));
+        return token!=null&&
+                ((token.getTime().isAfter(to)||
+                token.getTime().isEqual(to))&&
+                        (from.isBefore(token.getTime())||
+                        from.isEqual(token.getTime())));
     }
 
     private LogToken parseLogLine(String logLine) {
