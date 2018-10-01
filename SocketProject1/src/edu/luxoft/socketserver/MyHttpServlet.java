@@ -1,3 +1,5 @@
+package edu.luxoft.socketserver;
+
 import java.net.Socket;
 
 public class MyHttpServlet extends HttpServlet {

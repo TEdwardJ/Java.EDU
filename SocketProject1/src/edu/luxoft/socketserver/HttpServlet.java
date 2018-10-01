@@ -1,3 +1,5 @@
+package edu.luxoft.socketserver;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.Optional;
@@ -12,7 +14,6 @@ public abstract class HttpServlet {
     private HTTPRequest request;
     private StringBuilder requestContent;
     private Socket socket;
-
 
     private BufferedReader socketReader;
 

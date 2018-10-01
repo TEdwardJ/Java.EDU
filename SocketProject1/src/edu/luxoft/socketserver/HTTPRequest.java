@@ -1,3 +1,5 @@
+package edu.luxoft.socketserver;
+
 public class HTTPRequest {
 
     private String method;
@@ -59,7 +61,7 @@ public class HTTPRequest {
 
     @Override
     public String toString() {
-        return "HTTPRequest{" +
+        return "edu.luxoft.socketserver.HTTPRequest{" +
                 "method='" + method + '\'' +
                 ", resource='" + resource + '\'' +
                 ", host='" + host + '\'' +
