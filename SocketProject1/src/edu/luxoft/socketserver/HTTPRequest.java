@@ -1,9 +1,17 @@
 package edu.luxoft.socketserver;
 
-public class HTTPRequest {
+import java.util.HashMap;
+import java.util.Map;
 
-    private String method;
+public class HttpRequest {
+
+    private HttpMethod method;
     private String resource;
+
+    private Map<String, String> headers = new HashMap<>();
+    private String response;
+    private String host;
+    private String port;
 
     public String getResponse() {
         return response;
@@ -13,9 +21,6 @@ public class HTTPRequest {
         this.response = response;
     }
 
-    private String response;
-    private String host;
-    private String port;
 
     public String getContent() {
         return content;
@@ -27,11 +32,11 @@ public class HTTPRequest {
 
     private String content;
 
-    public String getMethod() {
+    public HttpMethod getMethod() {
         return method;
     }
 
-    public void setMethod(String method) {
+    public void setMethod(HttpMethod method) {
         this.method = method;
     }
 
@@ -44,7 +49,11 @@ public class HTTPRequest {
     }
 
     public String getHost() {
-        return host;
+        return headers.get("Host");
+    }
+
+    public String getHeader(String name) {
+        return headers.get(name);
     }
 
     public void setHost(String host) {
@@ -59,9 +68,13 @@ public class HTTPRequest {
         this.port = port;
     }
 
+    public void setHeader(String header,String value){
+        headers.put(header,value);
+    }
+
     @Override
     public String toString() {
-        return "edu.luxoft.socketserver.HTTPRequest{" +
+        return "edu.luxoft.socketserver.HttpRequest{" +
                 "method='" + method + '\'' +
                 ", resource='" + resource + '\'' +
                 ", host='" + host + '\'' +
